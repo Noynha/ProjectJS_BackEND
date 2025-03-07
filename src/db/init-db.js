@@ -75,3 +75,23 @@ db.run(`
       }
     }
 );
+
+// Create table order_detail
+db.run(`
+  CREATE TABLE IF NOT EXISTS order_detail (
+    orders_detail_id binary(16) PRIMARY KEY,
+    orders_id binary(16),
+    product_id binary(16),
+    program_id binary(16),
+    item int(20),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+  )
+`, 
+    [],
+    function(error) {
+      if (error) {
+        throw new Error(error);
+      }
+    }
+);
