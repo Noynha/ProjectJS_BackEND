@@ -18,3 +18,21 @@ db.run(`
       }
     }
 );
+
+// Create table program
+db.run(`
+  CREATE TABLE IF NOT EXISTS program (
+    program_id binary(16) PRIMARY KEY,
+    program_type varchar(40),
+    program_price float(20),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+  )
+`, 
+    [],
+    function(error) {
+      if (error) {
+        throw new Error(error);
+      }
+    }
+);
