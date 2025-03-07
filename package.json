@@ -7,6 +7,7 @@
     "start": "node ./index.js",
     "init-db": "node ./src/db/init-db.js"
   },
+  "type": "commonjs",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -17,6 +18,7 @@
     "express": "^4.21.2",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.9",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "uuidv4": "^6.2.13"
   }
 }
