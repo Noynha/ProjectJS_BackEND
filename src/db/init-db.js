@@ -1,5 +1,5 @@
 const sqlite3 = require('sqlite3');
-const db = new sqlite3.Database('./src/db/database.db');
+const db = new sqlite3.Database('./src/db/database.sqlite');
 
 // Create table customer
 db.run(`
@@ -65,7 +65,8 @@ db.run(`
     drop_at timestamp DEFAULT CURRENT_TIMESTAMP,
     take_at timestamp DEFAULT CURRENT_TIMESTAMP,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
   )
 `, 
     [],
@@ -85,7 +86,9 @@ db.run(`
     program_id binary(16),
     item int(20),
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES program(product_id),
+    FOREIGN KEY (program_id) REFERENCES program(program_id)
   )
 `, 
     [],
