@@ -51,7 +51,7 @@ ordersRouter.post("/", async (req, res) => {
 ordersRouter.put("/", async (req, res) => {
     try {
         const { id } = req.query;
-        const { status, total_price } = req.body;
+        const { status, total_price, drop_at, take_at } = req.body;
 
         if (!id) {
             return res.status(400).json({
@@ -80,9 +80,23 @@ ordersRouter.put("/", async (req, res) => {
                 data: null
             });
         }
+
+        if (!drop_at) {
+            return res.status(400).json({
+                message: "Drop_at is required",
+                data: null
+            });
+        }
+
+        if (!take_at) {
+            return res.status(400).json({
+                message: "Take_at is required",
+                data: null
+            });
+        }
   
-        await ordersController.updateOrders(id, { status, total_price });
-        res.status(200).json({ message: "Status or Total_price orders updated successfully" });
+        await ordersController.updateOrders(id, { status, total_price, drop_at, take_at });
+        res.status(200).json({ message: "Orders updated successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message || "Internal server error" });
     }
