@@ -62,8 +62,8 @@ db.run(`
     customer_id varchar(255),
     total_price float(20),
     status varchar(40),
-    drop_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    take_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    drop_at timestamp DEFAULT NULL,
+    take_at timestamp DEFAULT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
