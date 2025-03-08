@@ -21,7 +21,7 @@ async function getAllOrders() {
   return result_query;
 }
 
-async function getOrderById(orderId) {
+async function getOrdersById(ordersId) {
   const result_query = await new Promise((resolve, reject) => {
     db.all(`
       SELECT orders.*, customer.customer_name
@@ -29,7 +29,7 @@ async function getOrderById(orderId) {
       JOIN customer ON orders.customer_id = customer.customer_id
       WHERE orders.orders_id = ?
     `, 
-      [orderId],
+      [ordersId],
       function(error, data) {
         if (error) {
           reject(error);
@@ -42,19 +42,19 @@ async function getOrderById(orderId) {
   return result_query?.[0];
 }
 
-async function createOrder(customer_id, total_price, status = "Pending") {
-  const orderId = uuid();
+async function createOrders(customer_id, total_price, status) {
+  const ordersId = uuid();
   const result_query = await new Promise((resolve, reject) => {
     db.run(`
       INSERT INTO orders (orders_id, customer_id, total_price, status)
       VALUES (?, ?, ?, ?)
     `, 
-      [orderId, customer_id, total_price, status],
+      [ordersId, customer_id, total_price, status],
       function(error) {
         if (error) {
           reject(error);
         } else {
-          resolve({ orders_id: orderId });
+          resolve({ orders_id: ordersId });
         }
       }
     )
@@ -62,19 +62,19 @@ async function createOrder(customer_id, total_price, status = "Pending") {
   return result_query;
 }
 
-async function updateOrderStatus(orderId, status) {
+async function updateOrders(id, { status, total_price }) {
   const result_query = await new Promise((resolve, reject) => {
     db.run(`
       UPDATE orders
-      SET status = ?, updated_at = CURRENT_TIMESTAMP
+      SET status = ?, total_price = ?, updated_at = CURRENT_TIMESTAMP
       WHERE orders_id = ?
     `, 
-      [status, orderId],
-      function(error) {
+      [status, total_price, id],
+      function(error, data) {
         if (error) {
           reject(error);
         } else {
-          resolve({ message: "Order status updated successfully" });
+          resolve(data);
         }
       }
     )
@@ -85,9 +85,9 @@ async function updateOrderStatus(orderId, status) {
 // Export 
 const ordersController = {
   getAllOrders,
-  getOrderById,
-  createOrder,
-  updateOrderStatus
+  getOrdersById,
+  createOrders,
+  updateOrders
 };
 
 module.exports = ordersController;
