@@ -78,6 +78,33 @@ ordersRouter.put("/", async (req, res) => {
         res.status(500).json({ message: error.message || "Internal server error" });
     }
 });
+
+ordersRouter.delete('/', async (req, res) => {
+    try {
+        const { id } = req.query;  
+        if (!id) {
+            return res.status(400).json({
+            message: 'ID is required to delete the orders',
+            data: null
+        });
+        }
+        const orders = await ordersController.getOrdersById(id);
+      if (!orders) {
+        return res.status(404).json({
+          message: 'Order not found',
+          data: null
+        });
+      }
+        await ordersController.deleteOrders(id);
+  
+        return res.status(200).json({
+            message: 'Order deleted successfully',
+            data: null
+        });
+    } catch (error) {
+        res.status(500).json(error?.message || 'Internal server error');
+    }
+});
   
 
 module.exports = ordersRouter

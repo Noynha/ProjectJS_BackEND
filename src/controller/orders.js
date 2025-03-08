@@ -82,12 +82,29 @@ async function updateOrders(id, { status, total_price }) {
   return result_query;
 }
 
+async function deleteOrders(id) {
+    const result_query = await new Promise((resolve, reject) => {
+      db.all(`
+        DELETE FROM orders
+        WHERE orders_id = ?
+      `, [id], function(error, data) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+    return result_query;
+  }
+
 // Export 
 const ordersController = {
   getAllOrders,
   getOrdersById,
   createOrders,
-  updateOrders
+  updateOrders,
+  deleteOrders
 };
 
 module.exports = ordersController;
