@@ -39,7 +39,7 @@ async function getOrdersById(ordersId) {
       }
     )
   });
-  return result_query?.[0];
+  return result_query;
 }
 
 async function createOrders(customer_id, total_price, status) {
