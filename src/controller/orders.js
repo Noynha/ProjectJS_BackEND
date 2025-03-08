@@ -61,14 +61,14 @@ async function createOrders(customer_id, total_price, status, drop_at, take_at) 
   return result_query;
 }
 
-async function updateOrders(id, { status, total_price }) {
+async function updateOrders(id, { status, total_price, drop_at, take_at }) {
   const result_query = await new Promise((resolve, reject) => {
     db.run(`
       UPDATE orders
-      SET status = ?, total_price = ?, updated_at = CURRENT_TIMESTAMP
+      SET status = ?, total_price = ?, drop_at = ?, take_at = ?, updated_at = CURRENT_TIMESTAMP
       WHERE orders_id = ?
     `, 
-      [status, total_price, id],
+      [status, total_price, drop_at, take_at, id],
       function(error, data) {
         if (error) {
           reject(error);
