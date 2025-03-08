@@ -32,13 +32,15 @@ ordersRouter.get('/', async (req, res) => {
   
 ordersRouter.post("/", async (req, res) => {
     try {
-        const { customer_id, total_price } = req.body;
-
-        if (!customer_id || !total_price) {
-            return res.status(400).json({ message: "Customer ID and total price are required", data: null });
+        const { customer_id, total_price, status } = req.body;
+        if (!customer_id || !total_price || !status) {
+            return res.status(400).json({
+              message: "Customer ID or Total price or Status are required",
+              data: null
+            })
         }
 
-        const newOrders = await ordersController.createOrders(customer_id, total_price);
+        const newOrders = await ordersController.createOrders(customer_id, total_price, status);
         res.status(201).json({ message: "Order created successfully", data: newOrders });
     } catch (error) {
         res.status(500).json({ message: error.message || "Internal server error" });
@@ -49,7 +51,7 @@ ordersRouter.post("/", async (req, res) => {
 ordersRouter.put("/", async (req, res) => {
     try {
         const { id } = req.query;
-        const { status ,total_price } = req.body;
+        const { status, total_price } = req.body;
 
         if (!id) {
             return res.status(400).json({
@@ -65,9 +67,16 @@ ordersRouter.put("/", async (req, res) => {
             });
         }
 
-        if (!status && !total_price) {
+        if (!status) {
             return res.status(400).json({
-                message: "Status or Total_Price is required",
+                message: "Status is required",
+                data: null
+            });
+        }
+
+        if (!total_price) {
+            return res.status(400).json({
+                message: "Total_Price is required",
                 data: null
             });
         }
