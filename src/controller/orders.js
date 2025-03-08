@@ -42,13 +42,13 @@ async function getOrdersById(ordersId) {
   return result_query;
 }
 
-async function createOrders(customer_id, total_price, status) {
+async function createOrders(customer_id, total_price, status, drop_at, take_at) {
   const result_query = await new Promise((resolve, reject) => {
     db.all(`
-      INSERT INTO orders (orders_id, customer_id, total_price, status)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO orders (orders_id, customer_id, total_price, status, drop_at, take_at)
+      VALUES (?, ?, ?, ?, ? ,?)
     `, 
-      [uuid(), customer_id, total_price, status],
+      [uuid(), customer_id, total_price, status, drop_at, take_at],
       function(error, data) {
         if (error) {
           reject(error);
