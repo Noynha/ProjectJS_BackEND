@@ -78,13 +78,48 @@ async function createCustomer(name, phone) {
   return result_query;
 }
 
+async function updateCustomer(id, { name, phone }) {
+  const result_query = await new Promise((resolve, reject) => {
+    db.all(`
+      UPDATE customer
+      SET customer_name = ?, customer_phone = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE customer_id = ?
+    `, [name, phone, id], function(error, data) {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+  return result_query;
+}
+
+async function deleteCustomer(id) {
+  const result_query = await new Promise((resolve, reject) => {
+    db.all(`
+      DELETE FROM customer
+      WHERE customer_id = ?
+    `, [id], function(error, data) {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+  return result_query;
+}
+
 
 // Exports
 const customerController = {
   getOnceCustomerByName,
   getOnceCustomerById,
   getManyCustomer,
-  createCustomer
+  createCustomer,
+  updateCustomer,
+  deleteCustomer
 }
 
 module.exports = customerController

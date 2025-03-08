@@ -73,7 +73,7 @@ ordersRouter.put("/", async (req, res) => {
         }
   
         await ordersController.updateOrders(id, { status, total_price });
-        res.status(200).json({ message: "Order status updated successfully" });
+        res.status(200).json({ message: "Status or Total_price orders updated successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message || "Internal server error" });
     }
