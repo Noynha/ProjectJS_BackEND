@@ -43,18 +43,17 @@ async function getOrdersById(ordersId) {
 }
 
 async function createOrders(customer_id, total_price, status) {
-  const ordersId = uuid();
   const result_query = await new Promise((resolve, reject) => {
-    db.run(`
+    db.all(`
       INSERT INTO orders (orders_id, customer_id, total_price, status)
       VALUES (?, ?, ?, ?)
     `, 
-      [ordersId, customer_id, total_price, status],
-      function(error) {
+      [uuid(), customer_id, total_price, status],
+      function(error, data) {
         if (error) {
           reject(error);
         } else {
-          resolve({ orders_id: ordersId });
+          resolve(data);
         }
       }
     )
@@ -95,7 +94,7 @@ async function deleteOrders(id) {
         }
       });
     });
-    return result_query;
+    return result_query?.[0];
   }
 
 // Export 
