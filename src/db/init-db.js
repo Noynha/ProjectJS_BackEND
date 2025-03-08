@@ -55,7 +55,7 @@ db.run(`
     }
 );
 
-// Create table order
+// Create table orders
 db.run(`
   CREATE TABLE IF NOT EXISTS orders (
     orders_id varchar(255) PRIMARY KEY,
@@ -98,5 +98,7 @@ db.run(`
       }
     }
 );
+
+
 
 module.exports = db
