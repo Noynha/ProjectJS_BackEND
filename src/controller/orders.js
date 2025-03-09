@@ -42,37 +42,33 @@ async function getOrdersById(ordersId) {
   return result_query;
 }
 
-async function createOrders(customer_id, status, drop_at, take_at) {
+// คำนวณ total_price จาก order_detail
+async function calculateTotalPrice(orders_id) {
+  return new Promise((resolve, reject) => {
+      db.get(`
+          SELECT 
+              SUM(product.product_price * order_detail.quantity + program.program_price) AS total_price
+          FROM order_detail
+          JOIN product ON order_detail.product_id = product.product_id
+          JOIN program ON order_detail.program_id = program.program_id
+          WHERE order_detail.orders_id = ?
+      `, [orders_id], (error, data) => {
+          if (error) reject(error);
+          else resolve(data?.total_price || 0);
+      });
+  });
+}
+
+async function createOrders( customer_id, status, drop_at, take_at ) {
   const ordersId = uuid()
 
-  // คำนวณ total_price จาก order_detail
-  const total_price = await new Promise((resolve, reject) => {
-    db.get(
-        `
-        SELECT 
-            SUM(product.product_price * order_detail.quantity + program.program_price) AS total_price
-        FROM order_detail 
-        JOIN product ON order_detail.product_id = product.product_id
-        JOIN program ON order_detail.program_id = program.program_id
-        WHERE order_detail.order_id = ?
-        `,
-        [ordersId],
-        function (error, data) {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(data?.total_price || 0);
-            }
-        }
-    );
-  });
-
+  // ver . not have total_price
   const result_query = await new Promise((resolve, reject) => {
     db.all(`
       INSERT INTO orders (orders_id, customer_id, total_price, status, drop_at, take_at)
       VALUES (?, ?, ?, ?, ? ,?)
     `, 
-      [ordersId, customer_id, total_price, status, drop_at, take_at],
+      [ordersId, customer_id, 0, status, drop_at, take_at],
       function(error, data) {
         if (error) {
           reject(error);
@@ -83,6 +79,24 @@ async function createOrders(customer_id, status, drop_at, take_at) {
     )
   });
   return result_query;
+
+  // ver. have total_price
+  // const result_query = await new Promise((resolve, reject) => {
+  //   db.all(`
+  //     INSERT INTO orders (orders_id, customer_id, total_price, status, drop_at, take_at)
+  //     VALUES (?, ?, ?, ?, ? ,?)
+  //   `, 
+  //     [ordersId, customer_id, total_price, status, drop_at, take_at],
+  //     function(error, data) {
+  //       if (error) {
+  //         reject(error);
+  //       } else {
+  //         resolve(data);
+  //       }
+  //     }
+  //   )
+  // });
+  // return result_query;
 }
 
 async function updateOrders(id, { status, drop_at, take_at }) {
@@ -125,6 +139,7 @@ async function deleteOrders(id) {
 const ordersController = {
   getAllOrders,
   getOrdersById,
+  calculateTotalPrice,
   createOrders,
   updateOrders,
   deleteOrders
