@@ -1,7 +1,7 @@
 const reportRouter = require('express').Router()
 const reportController = require('../controller/report')
 
-reportRouter.get('/api/report', async (req, res) => {
+reportRouter.get('/', async (req, res) => {
     try {
       // ดึงข้อมูลจาก reportController
       const report = await reportController.getReport();

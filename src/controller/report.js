@@ -16,13 +16,13 @@ async function getReport() {
         orders.total_price
         FROM 
             orders
-        JOIN 
+        LEFT JOIN 
             customer ON orders.customer_id = customer.customer_id
-        JOIN 
+        LEFT JOIN 
             order_detail ON orders.orders_id = order_detail.orders_id
-        JOIN 
+        LEFT JOIN 
             product ON order_detail.product_id = product.product_id
-        JOIN 
+        LEFT JOIN 
             program ON order_detail.program_id = program.program_id;
         `, 
         [], // ใช้ [] หากไม่มีพารามิเตอร์เพิ่มเติมใน query
