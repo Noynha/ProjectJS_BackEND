@@ -32,15 +32,15 @@ ordersRouter.get('/', async (req, res) => {
   
 ordersRouter.post("/", async (req, res) => {
     try {
-        const { customer_id, total_price, status, drop_at, take_at } = req.body;
-        if (!customer_id || !total_price || !status || !drop_at || !take_at) {
+        const { customer_id, status, drop_at, take_at } = req.body;
+        if (!customer_id || !status || !drop_at || !take_at) {
             return res.status(400).json({
-              message: "Customer ID or Total price or Status or Drop_at or Take_at are required",
+              message: "Customer ID or Status or Drop_at or Take_at are required",
               data: null
             })
         }
 
-        const newOrders = await ordersController.createOrders(customer_id, total_price, status, drop_at, take_at);
+        const newOrders = await ordersController.createOrders(customer_id, status, drop_at, take_at);
         res.status(201).json({ message: "Order created successfully", data: newOrders });
     } catch (error) {
         res.status(500).json({ message: error.message || "Internal server error" });
@@ -51,7 +51,7 @@ ordersRouter.post("/", async (req, res) => {
 ordersRouter.put("/", async (req, res) => {
     try {
         const { id } = req.query;
-        const { status, total_price, drop_at, take_at } = req.body;
+        const { status, drop_at, take_at } = req.body;
 
         if (!id) {
             return res.status(400).json({
@@ -74,12 +74,12 @@ ordersRouter.put("/", async (req, res) => {
           });
         }
 
-        if (total_price === undefined || total_price === null) {
-            return res.status(400).json({
-              message: "Total Price is required",
-              data: null
-          });
-        }
+        // if (total_price === undefined || total_price === null) {
+        //     return res.status(400).json({
+        //       message: "Total Price is required",
+        //       data: null
+        //   });
+        // }
 
         // if (drop_at === undefined || drop_at === null) {
         //     return res.status(400).json({
