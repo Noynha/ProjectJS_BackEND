@@ -34,7 +34,7 @@ orderDetailRouter.post("/", async (req, res) => {
         const { orders_id,product_id,program_id,item } = req.body;
 
         if (!orders_id || !product_id|| !program_id|| !item ) {
-            return res.status(400).json({ message: "Order ID and Product ID and Program ID are required", data: null });
+            return res.status(400).json({ message: "Order ID and Product ID and Program ID  and item are required", data: null });
         }
 
         const newOrder_detail = await orderDetailController.createOrdersDetail(orders_id,product_id,program_id,item);

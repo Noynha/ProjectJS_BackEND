@@ -47,7 +47,7 @@ async function calculateTotalPrice(orders_id) {
   return new Promise((resolve, reject) => {
       db.get(`
           SELECT 
-              SUM(product.product_price * order_detail.quantity + program.program_price) AS total_price
+              SUM(product.product_price * order_detail.item + program.program_price) AS total_price
           FROM order_detail
           JOIN product ON order_detail.product_id = product.product_id
           JOIN program ON order_detail.program_id = program.program_id
@@ -59,10 +59,10 @@ async function calculateTotalPrice(orders_id) {
   });
 }
 
+// create Orders โดยทที่ total_price = 0
 async function createOrders( customer_id, status, drop_at, take_at ) {
   const ordersId = uuid()
 
-  // ver . not have total_price
   const result_query = await new Promise((resolve, reject) => {
     db.all(`
       INSERT INTO orders (orders_id, customer_id, total_price, status, drop_at, take_at)
@@ -79,34 +79,29 @@ async function createOrders( customer_id, status, drop_at, take_at ) {
     )
   });
   return result_query;
-
-  // ver. have total_price
-  // const result_query = await new Promise((resolve, reject) => {
-  //   db.all(`
-  //     INSERT INTO orders (orders_id, customer_id, total_price, status, drop_at, take_at)
-  //     VALUES (?, ?, ?, ?, ? ,?)
-  //   `, 
-  //     [ordersId, customer_id, total_price, status, drop_at, take_at],
-  //     function(error, data) {
-  //       if (error) {
-  //         reject(error);
-  //       } else {
-  //         resolve(data);
-  //       }
-  //     }
-  //   )
-  // });
-  // return result_query;
 }
 
-async function updateOrders(id, { status, drop_at, take_at }) {
+async function updateOrdersTotalPrice(orders_id, total_price) {
+  return new Promise((resolve, reject) => {
+      db.run(`
+          UPDATE orders
+          SET total_price = ?, updated_at = CURRENT_TIMESTAMP
+          WHERE orders_id = ?
+      `, [total_price, orders_id], function (error) {
+          if (error) reject(error);
+          else resolve(true);
+      });
+  });
+}
+
+async function updateOrders(id, { status,  drop_at, take_at }) {
   const result_query = await new Promise((resolve, reject) => {
     db.run(`
       UPDATE orders
-      SET status = ?, drop_at = ?, take_at = ?, updated_at = CURRENT_TIMESTAMP
+      SET  status = ?, drop_at = ?, take_at = ?, updated_at = CURRENT_TIMESTAMP
       WHERE orders_id = ?
     `, 
-      [status, drop_at, take_at, id],
+      [ status, drop_at, take_at, id],
       function(error, data) {
         if (error) {
           reject(error);
@@ -141,6 +136,7 @@ const ordersController = {
   getOrdersById,
   calculateTotalPrice,
   createOrders,
+  updateOrdersTotalPrice,
   updateOrders,
   deleteOrders
 };

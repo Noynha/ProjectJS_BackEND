@@ -1,5 +1,6 @@
 const db = require("../db/init-db");
 const { uuid } = require("uuidv4");
+const { calculateTotalPrice, updateOrdersTotalPrice } = require("../controller/orders");
 
 async function getAllOrderDetail() {
     const result_query = await new Promise((resolve, reject) => {
@@ -44,14 +45,14 @@ async function getAllOrderDetail() {
   }
 
 
-  async function createOrdersDetail(orders_id,product_id,program_id,item) {
+  async function createOrdersDetail(orders_id, product_id, program_id, item) {
     const orderDetailId = uuid();
     const result_query = await new Promise((resolve, reject) => {
       db.run(`
-        INSERT INTO order_detail (orders_detail_id,orders_id,product_id,program_id,item)
+        INSERT INTO order_detail (orders_detail_id, orders_id, product_id, program_id, item)
         VALUES (?, ?, ?, ?, ?)
       `, 
-        [orderDetailId,orders_id,product_id,program_id,item],
+        [orderDetailId, orders_id, product_id, program_id, item],
         function(error) {
           if (error) {
             reject(error);
@@ -61,6 +62,10 @@ async function getAllOrderDetail() {
         }
       )
     });
+
+    const total_price = await calculateTotalPrice(orders_id);
+    await updateOrdersTotalPrice(orders_id, total_price);
+
     return result_query;
   }
   
@@ -81,6 +86,9 @@ async function getAllOrderDetail() {
         }
       )
     });
+
+
+
     return result_query;
   }
 

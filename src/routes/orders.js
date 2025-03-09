@@ -74,13 +74,6 @@ ordersRouter.put("/", async (req, res) => {
           });
         }
 
-        // if (total_price === undefined || total_price === null) {
-        //     return res.status(400).json({
-        //       message: "Total Price is required",
-        //       data: null
-        //   });
-        // }
-
         // if (drop_at === undefined || drop_at === null) {
         //     return res.status(400).json({
         //       message: "Drop_at Price is required",
