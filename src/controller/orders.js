@@ -60,7 +60,7 @@ async function calculateTotalPrice(orders_id) {
 }
 
 // create Orders โดยทที่ total_price = 0
-async function createOrders( customer_id, status, drop_at, take_at ) {
+async function createOrders( customer_id, drop_at, take_at ) {
   const ordersId = uuid()
 
   const result_query = await new Promise((resolve, reject) => {
@@ -68,7 +68,7 @@ async function createOrders( customer_id, status, drop_at, take_at ) {
       INSERT INTO orders (orders_id, customer_id, total_price, status, drop_at, take_at)
       VALUES (?, ?, ?, ?, ? ,?)
     `, 
-      [ordersId, customer_id, 0, status, drop_at, take_at],
+      [ordersId, customer_id, 0, "Waiting to receive the cloth", drop_at, take_at],
       function(error, data) {
         if (error) {
           reject(error);
@@ -79,6 +79,23 @@ async function createOrders( customer_id, status, drop_at, take_at ) {
     )
   });
   return result_query;
+}
+
+async function updateOrderStatusByDate() {
+  return new Promise((resolve, reject) => {
+      db.run(`
+          UPDATE orders
+          SET status = 
+              CASE 
+                  WHEN date('now') >= drop_at AND date('now') < take_at THEN 'Doing laundry'
+                  WHEN date('now') >= take_at THEN 'Ready for pickup , Success'
+                  ELSE status
+              END
+      `, [], function (error) {
+          if (error) reject(error);
+          else resolve(true);
+      });
+  });
 }
 
 async function updateOrdersTotalPrice(orders_id, total_price) {
@@ -136,6 +153,7 @@ const ordersController = {
   getOrdersById,
   calculateTotalPrice,
   createOrders,
+  updateOrderStatusByDate,
   updateOrdersTotalPrice,
   updateOrders,
   deleteOrders
