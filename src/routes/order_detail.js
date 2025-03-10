@@ -44,9 +44,9 @@ orderDetailRouter.post("/", async (req, res) => {
     }  
 });
 
-orderDetailRouter.put("/:id", async (req, res) => {
+orderDetailRouter.put("/", async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.query;
         const { item } = req.body;
 
         if (!id) {
@@ -80,9 +80,9 @@ orderDetailRouter.put("/:id", async (req, res) => {
     }
 });
 
-orderDetailRouter.delete('/:id', async (req, res) => {
+orderDetailRouter.delete('/', async (req, res) => {
     try {
-        const { id } = req.params;  
+        const { id } = req.query;  
         if (!id) {
             return res.status(400).json({
             message: 'ID is required to delete the orderDetail',
