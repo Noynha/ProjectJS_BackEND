@@ -30,6 +30,7 @@ customerRouter.get('/', async (req, res) => {
   }
 })
 
+// post old
 customerRouter.post('/', async (req, res) => {
   try {
     const { name, phone } = req.body
@@ -57,6 +58,50 @@ customerRouter.post('/', async (req, res) => {
     res.status(500).json(error?.message || 'Internal server error')
   }
 })
+
+// new post
+
+// register
+customerRouter.post('/register', async (req, res) => {
+  try {
+    const { name, phone } = req.body;
+    if (!name || !phone) {
+      return res.status(400).json({ message: 'Name and phone are required', data: null });
+    }
+
+    // ตรวจสอบว่ามีทั้งชื่อและเบอร์ในระบบหรือยัง
+    const findCustomer = await customerController.getOnceCustomerByName(name);
+    if (findCustomer && findCustomer.customer_phone === phone) {
+      return res.status(400).json({ message: 'Customer already exists', data: null });
+    }
+
+    await customerController.createCustomer(name, phone);
+    res.status(200).json({ message: 'Customer created', data: null });
+  } catch (error) {
+    res.status(500).json({ message: error?.message || 'Internal server error' });
+  }
+});
+
+// Login 
+customerRouter.post('/login', async (req, res) => {
+  try {
+    const { name, phone } = req.body;
+    if (!name || !phone) {
+      return res.status(400).json({ message: 'Name and phone are required', data: null });
+    }
+
+    // ตรวจสอบว่ามีข้อมูลลูกค้าในระบบแล้งยัง
+    const customer = await customerController.getOnceCustomerByName(name);
+    if (!customer || customer.customer_phone !== phone) {
+      return res.status(400).json({ message: 'Invalid name or phone', data: null });
+    }
+
+    res.status(200).json({ message: 'Login successful', data: customer });
+  } catch (error) {
+    res.status(500).json({ message: error?.message || 'Internal server error' });
+  }
+});
+
 
 customerRouter.put('/', async (req, res) => {
   try {
