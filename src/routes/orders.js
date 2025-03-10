@@ -74,20 +74,6 @@ ordersRouter.put("/", async (req, res) => {
           });
         }
 
-        // if (drop_at === undefined || drop_at === null) {
-        //     return res.status(400).json({
-        //       message: "Drop_at Price is required",
-        //       data: null
-        //   });
-        // }
-
-        // if (take_at === undefined || take_at === null) {
-        //     return res.status(400).json({
-        //       message: "Take_at Price is required",
-        //       data: null
-        //   });
-        // }
-
         drop_at = drop_at ?? order.drop_at;
         take_at = take_at ?? order.take_at;
   
