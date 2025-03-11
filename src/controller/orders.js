@@ -81,22 +81,22 @@ async function createOrders( customer_id, drop_at, take_at ) {
   return result_query;
 }
 
-async function updateOrderStatusByDate() {
-  return new Promise((resolve, reject) => {
-      db.run(`
-          UPDATE orders
-          SET status = 
-              CASE 
-                  WHEN date('now') >= drop_at AND date('now') < take_at THEN 'Doing laundry'
-                  WHEN date('now') >= take_at THEN 'Ready for pickup , Success'
-                  ELSE status
-              END
-      `, [], function (error) {
-          if (error) reject(error);
-          else resolve(true);
-      });
-  });
-}
+// async function updateOrderStatusByDate() {
+//   return new Promise((resolve, reject) => {
+//       db.run(`
+//           UPDATE orders
+//           SET status = 
+//               CASE 
+//                   WHEN date('now') >= drop_at AND date('now') < take_at THEN 'Doing laundry'
+//                   WHEN date('now') >= take_at THEN 'Ready for pickup , Success'
+//                   ELSE status
+//               END
+//       `, [], function (error) {
+//           if (error) reject(error);
+//           else resolve(true);
+//       });
+//   });
+// }
 
 async function updateOrdersTotalPrice(orders_id, total_price) {
   return new Promise((resolve, reject) => {
@@ -153,7 +153,7 @@ const ordersController = {
   getOrdersById,
   calculateTotalPrice,
   createOrders,
-  updateOrderStatusByDate,
+  // updateOrderStatusByDate,
   updateOrdersTotalPrice,
   updateOrders,
   deleteOrders

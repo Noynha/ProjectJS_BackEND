@@ -22,14 +22,14 @@ app.listen(port, () => {
 
 // setInterval(async () => {
 //   await updateOrderStatusByDate();
-//   console.log("✅ Order statuses updated");
+//   console.log(" Order statuses updated");
 // }, 1000 * 60 * 60); // รันทุก 1 ชั่วโมง
 
-setInterval(async () => {
-  try {
-    await updateOrderStatusByDate();
-    console.log("✅ Order statuses updated");
-  } catch (error) {
-    console.error("❌ Failed to update order statuses:", error);
-  }
-}, 1000 * 60 * 60); // รันทุก 1 ชั่วโมง
+// setInterval(async () => {
+//   try {
+//     await updateOrderStatusByDate();
+//     console.log(" Order statuses updated");
+//   } catch (error) {
+//     console.error(" Failed to update order statuses:", error);
+//   }
+// }, 1000 * 60 * 60); // รันทุก 1 ชั่วโมง
