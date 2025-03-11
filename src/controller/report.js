@@ -13,6 +13,7 @@ async function getReport() {
         product.product_type,
         order_detail.item,
         product.product_price,
+        program.program_price,
         orders.total_price
         FROM 
             orders
