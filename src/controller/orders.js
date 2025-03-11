@@ -136,6 +136,25 @@ async function updateOrders(id, { status,  drop_at, take_at }) {
   });
   return result_query;
 }
+async function updateOrdersStatus(id, { status }) {
+  const result_query = await new Promise((resolve, reject) => {
+    db.run(`
+      UPDATE orders
+      SET  status = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE orders_id = ?
+    `, 
+      [ status, id],
+      function(error, data) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      }
+    )
+  });
+  return result_query;
+}
 
 async function deleteOrders(id) {
     const result_query = await new Promise((resolve, reject) => {
@@ -159,6 +178,7 @@ const ordersController = {
   getOrdersById,
   calculateTotalPrice,
   createOrders,
+  updateOrdersStatus,
   // updateOrderStatusByDate,
   updateOrdersTotalPrice,
   updateOrders,

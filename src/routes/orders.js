@@ -53,7 +53,7 @@ ordersRouter.post("/", async (req, res) => {
 ordersRouter.put("/", async (req, res) => {
     try {
         const { id } = req.query;
-        const { status, drop_at, take_at } = req.body;
+        let { status, drop_at, take_at ,total_price} = req.body;
 
         if (!id) {
             return res.status(400).json({
@@ -78,10 +78,12 @@ ordersRouter.put("/", async (req, res) => {
 
         drop_at = drop_at ?? order.drop_at;
         take_at = take_at ?? order.take_at;
-  
-        await ordersController.updateOrders(id, { status, total_price, drop_at, take_at });
+        total_price = total_price ?? order.total_price;
+        
+        await ordersController.updateOrdersStatus(id, { status });
         res.status(200).json({ message: "Orders updated successfully" });
     } catch (error) {
+      console.log(error)
         res.status(500).json({ message: error.message || "Internal server error" });
     }
 });
