@@ -42,14 +42,14 @@ customerRouter.post('/', async (req, res) => {
       })
     }
 
-    const findCustomer = await customerController.getOnceCustomerByName(name)
-    if (findCustomer) {
-      return res.status(400).json({
-        message: 'Customer already exist',
-        data: null
+    const alreadyCustomer = await customerController.findOnceCustomerByNameAndPhone(name,phone)
+    if (alreadyCustomer) {
+      return res.status(200).json({
+        message: 'Customer already',
+        data: alreadyCustomer
       })
-    } 
-    
+    }
+
     const newCustomer = await customerController.createCustomer(name, phone)
     console.log("new",newCustomer)
     res.status(200).json({

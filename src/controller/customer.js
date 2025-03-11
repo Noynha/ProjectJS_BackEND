@@ -1,6 +1,27 @@
 const db = require("../db/init-db");
 const { uuid } = require("uuidv4");
 
+async function findOnceCustomerByNameAndPhone(name,phone) {
+  const result_query = await new Promise((resolve, reject) => {
+    db.all(`
+      SELECT * FROM customer
+      WHERE 
+        customer_name = ?
+        AND customer_phone = ?
+    `, 
+      [name,phone],
+      function(error, data) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      }
+    )
+  })
+  return result_query?.[0];
+}
+
 async function getOnceCustomerByName(name) {
   const result_query = await new Promise((resolve, reject) => {
     db.all(`
@@ -115,6 +136,7 @@ async function deleteCustomer(id) {
 
 // Exports
 const customerController = {
+  findOnceCustomerByNameAndPhone,
   getOnceCustomerByName,
   getOnceCustomerById,
   getManyCustomer,
