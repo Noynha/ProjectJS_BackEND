@@ -13,8 +13,24 @@ app.use(morgan('dev'))
 app.use('/api', router)
 
 const msg = `Backend server running on port ${port}` 
-app.get('/', (_req, res) => {
+app.get('/', (req, res) => {
   res.send(msg)
 })
 
-app.listen(port, () => console.info(msg))
+app.listen(port, () => {
+  console.log(msg)
+})
+
+// setInterval(async () => {
+//   await updateOrderStatusByDate();
+//   console.log(" Order statuses updated");
+// }, 1000 * 60 * 60); // รันทุก 1 ชั่วโมง
+
+// setInterval(async () => {
+//   try {
+//     await updateOrderStatusByDate();
+//     console.log(" Order statuses updated");
+//   } catch (error) {
+//     console.error(" Failed to update order statuses:", error);
+//   }
+// }, 1000 * 60 * 60); // รันทุก 1 ชั่วโมง

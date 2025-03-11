@@ -34,6 +34,7 @@ customerRouter.get('/', async (req, res) => {
 customerRouter.post('/', async (req, res) => {
   try {
     const { name, phone } = req.body
+    console.log(req.body)
     if (!name || !phone) {
       return res.status(400).json({
         message: 'Name and phone are required',
@@ -50,6 +51,7 @@ customerRouter.post('/', async (req, res) => {
     }
 
     const newCustomer = await customerController.createCustomer(name, phone)
+    console.log("new",newCustomer)
     res.status(200).json({
       message: 'Customer created',
       data: newCustomer
