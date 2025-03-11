@@ -16,14 +16,14 @@ productRouter.get('/', async (req, res) => {
   
         return res.status(200).json({
           message: 'Success',
-          products: products
+          product: product
         })
       }
   
-      const products = await productController.getManyProducts() 
+      const product = await productController.getManyProducts() 
       return res.status(200).json({
         message: 'Success',
-        products: products
+        product: product
       })
     } catch (error) {
       res.status(500).json(error?.message || 'Internal server error')
