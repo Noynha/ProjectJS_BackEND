@@ -35,7 +35,6 @@ async function getAllOrderDetail() {
           if (error) {
             reject(error);
           } else {
-            console.log(data)
             resolve(data);
           }
         }

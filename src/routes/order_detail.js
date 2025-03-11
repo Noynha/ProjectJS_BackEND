@@ -55,10 +55,8 @@ orderDetailRouter.put("/", async (req, res) => {
                 data: null
             });
         }
-        console.log(id)
         const orderDetail = await orderDetailController.getOrderDetailById(id);
         
-        console.log(orderDetail)
         if (!orderDetail) {
             return res.status(404).json({
                 message: 'OrderDetail not found',
