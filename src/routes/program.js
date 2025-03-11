@@ -23,7 +23,7 @@ programRouter.get('/', async (req, res) => {
       const programs = await programController.getAllPrograms()
       return res.status(200).json({
         message: 'Success',
-        data: programs 
+        programs: programs 
       })
     } catch (error) {
       res.status(500).json(error?.message || 'Internal server error')
