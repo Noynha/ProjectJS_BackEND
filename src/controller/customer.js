@@ -64,6 +64,7 @@ async function createCustomer(name, phone) {
         (customer_id, customer_name, customer_phone)
       VALUES
         (?, ?, ?)
+      RETURNING *
     `, 
       [uuid(), name, phone],
       function(error, data) {
@@ -75,7 +76,7 @@ async function createCustomer(name, phone) {
       }
     )
   })
-  return result_query;
+  return result_query?.[0];
 }
 
 async function updateCustomer(id, { name, phone }) {

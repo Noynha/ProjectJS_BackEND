@@ -1,5 +1,6 @@
 const db = require("../db/init-db");
 const { uuid } = require("uuidv4");
+const moment = require('moment');
 
 async function getAllOrders() {
   const result_query = await new Promise((resolve, reject) => {
@@ -47,7 +48,7 @@ async function calculateTotalPrice(orders_id) {
   return new Promise((resolve, reject) => {
       db.get(`
           SELECT 
-              SUM(product.product_price * order_detail.item + program.program_price) AS total_price
+              SUM((product.product_price * order_detail.item) + (program.program_price*order_detail.item)) AS total_price
           FROM order_detail
           JOIN product ON order_detail.product_id = product.product_id
           JOIN program ON order_detail.program_id = program.program_id
@@ -63,12 +64,17 @@ async function calculateTotalPrice(orders_id) {
 async function createOrders( customer_id, drop_at, take_at ) {
   const ordersId = uuid()
 
+  const drop_at_date = moment(drop_at?.split(" ")?.[0],"YYYY-MM-DD")
+  const current_date = moment().startOf("day")
+  const isorder_waiting = drop_at_date.startOf("day").isAfter(current_date)
+  const orders_status = isorder_waiting ? "waiting" : "in-progress"
   const result_query = await new Promise((resolve, reject) => {
     db.all(`
       INSERT INTO orders (orders_id, customer_id, total_price, status, drop_at, take_at)
       VALUES (?, ?, ?, ?, ? ,?)
+      RETURNING *
     `, 
-      [ordersId, customer_id, 0, "Waiting to receive the cloth", drop_at, take_at],
+      [ordersId, customer_id, 0, orders_status, drop_at, take_at],
       function(error, data) {
         if (error) {
           reject(error);
@@ -78,7 +84,7 @@ async function createOrders( customer_id, drop_at, take_at ) {
       }
     )
   });
-  return result_query;
+  return result_query?.[0];
 }
 
 // async function updateOrderStatusByDate() {

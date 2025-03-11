@@ -33,6 +33,7 @@ ordersRouter.get('/', async (req, res) => {
 ordersRouter.post("/", async (req, res) => {
     try {
         const { customer_id, status, drop_at, take_at } = req.body;
+        console.log(req.body)
         if (!customer_id || !status || !drop_at || !take_at) {
             return res.status(400).json({
               message: "Customer ID or Status or Drop_at or Take_at are required",
@@ -40,9 +41,10 @@ ordersRouter.post("/", async (req, res) => {
             })
         }
 
-        const newOrders = await ordersController.createOrders(customer_id, status, drop_at, take_at);
+        const newOrders = await ordersController.createOrders(customer_id, drop_at, take_at);
         res.status(201).json({ message: "Order created successfully", data: newOrders });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: error.message || "Internal server error" });
     }  
 });
